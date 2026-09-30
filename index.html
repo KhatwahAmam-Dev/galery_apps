@@ -264,7 +264,6 @@ function logout(){TOKEN="";try{sessionStorage.removeItem("adm")}catch(e){}adminU
 $("#adm").onclick=()=>TOKEN?logout():($("#lerr").textContent="",$("#ldlg").showModal());
 $("#lfrm").addEventListener("submit",async e=>{
   if(e.submitter&&e.submitter.value!=="ok")return;e.preventDefault();
-  if(!API){$("#lerr").textContent="Alamat API belum diisi di file.";return}
   const f=new FormData($("#lfrm"));
   try{const r=await fetch(API+"/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user:f.get("user"),pass:f.get("pass")})});
     if(r.status===429){$("#lerr").textContent="Terlalu banyak percobaan. Coba lagi 15 menit lagi.";return}
