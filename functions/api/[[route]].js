@@ -15,6 +15,10 @@ const send = (d, s = 200) => new Response(JSON.stringify(d), { status: s, header
 export async function onRequest({ request: req, env }) {
   const path = new URL(req.url).pathname, S = env.SESSION_SECRET;
 
+  // Pemeriksaan pengaturan: bila ada yang belum dipasang, beri tahu namanya (bukan isinya)
+  const missing = ["APPS", "ADMIN_USER", "ADMIN_PASS", "SESSION_SECRET"].filter(n => !env[n]);
+  if (missing.length) return send({ error: "config", missing }, 500);
+
   // Publik: baca daftar aplikasi
   if (path === "/api/apps" && req.method === "GET")
     return send(JSON.parse((await env.APPS.get("list")) || "null"));
