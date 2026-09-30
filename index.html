@@ -267,6 +267,7 @@ $("#lfrm").addEventListener("submit",async e=>{
   const f=new FormData($("#lfrm"));
   try{const r=await fetch(API+"/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user:f.get("user"),pass:f.get("pass")})});
     if(r.status===429){$("#lerr").textContent="Terlalu banyak percobaan. Coba lagi 15 menit lagi.";return}
+    if(r.status>=500){let m="";try{m=((await r.json()).missing||[]).join(", ")}catch(x){}$("#lerr").textContent="Pengaturan server belum lengkap"+(m?": "+m:"")+".";return}
     if(!r.ok)throw 0;TOKEN=(await r.json()).token;try{sessionStorage.setItem("adm",TOKEN)}catch(x){}
     $("#ldlg").close();$("#lfrm").reset();adminUI()}catch(x){$("#lerr").textContent="Nama pengguna atau kata sandi salah."}});
 $("#add").onclick=()=>{$("#frm").reset();$("#frm").elements.id.value="";$("#dlg").showModal()};
